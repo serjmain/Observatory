@@ -1,10 +1,10 @@
-"use strict"
+"use strict";
 
 function PremiumUser(name, email, password, cardBalance) {
     User.call(this, name, email, password, cardBalance);
     this._premiumAccess = false;
-    this._pickedTelescope = null;
-};
+    this.__pickedTelescope = null;
+}
 
 PremiumUser.prototype = Object.create(User.prototype);
 PremiumUser.prototype.constructor = PremiumUser;
@@ -14,38 +14,34 @@ PremiumUser.prototype.isAvailablePremiumAccess = function () {
 };
 
 PremiumUser.prototype.buyPremium = function (observatory) {
-    if (this._cardBalance > observatory._price) {
-        this._cardBalance = this._cardBalance - observatory._price;
+    if (this._cardBalance >= observatory.getPremiumPrice()) {
+        this._cardBalance = this._cardBalance - observatory.getPremiumPrice();
         this._premiumAccess = true;
     } else {
-        throw Error("Some money error")
+        throw Error("Some money error");
     };
 };
 
 PremiumUser.prototype.pickTelescope = function (telescopeName, observatoryName) {
     if (!this._premiumAccess) {
-        throw Error("u can pick telescope only if u have premium access");
+        throw Error("u can pick telescope only if you have premium access");
     };
-    var observatoryList = this.getObservatoryList()
-    for (var i = 0; i < observatoryList.length; i++) {
-        if (observatoryList[i]._name === observatoryName) {
-            var telescops = observatoryList[i].getTelescops();
-            for (var j = 0; j < telescops.length; j++) {
-                if (telescops[j]._name === telescopeName) {
-                    this._pickedTelescope = telescops[j];
-                    break;
-                };
-            };
+    var observatoryList = this._observatoryList;
+    observatoryList.forEach(function (observatory) {
+        if (observatory.getName() === observatoryName) {
+            var telescops = observatory.getTelescops();
+            telescops.forEach(function (telescope) {
+                if (telescope.getName() === telescopeName) {
+                    this.__pickedTelescope = telescope;
+                }
+            }.bind(this));
         };
-    };
+    }.bind(this));
 };
 
 PremiumUser.prototype.watchTelescope = function () {
-    if (this._pickedTelescope) {
-        return this._pickedTelescope.getVision()
-    } else {
-        throw Error("Some error")
-    };
-
+    if (this.__pickedTelescope) {
+        return this.__pickedTelescope.getVision();
+    }
 };
 

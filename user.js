@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 function User(name, email, password, cardBalance) {
     this._name = name;
@@ -7,7 +7,7 @@ function User(name, email, password, cardBalance) {
     this._cardBalance = cardBalance;
     this._observatoryList = [];
     this._excursions = [];
-};
+}
 
 User.prototype.getName = function () {
     return this._name;
@@ -42,15 +42,34 @@ User.prototype.getObservatoryList = function () {
 };
 
 User.prototype.addObservatory = function (observatory) {
-    this._observatoryList.push(observatory)
+    this._observatoryList.push(observatory);
 };
 
-User.prototype.buyExcursion = function (observatory) {
-    if (this._cardBalance > observatory._price) {
-        this._cardBalance = this._cardBalance - observatory._price
-        this._excursions.push(observatory);
-    } else {
-        throw Error("Not enough money")
+User.prototype.buyExcursion = function (observatoryName) {
+    if (this._observatoryList.length > 0) {
+        this._observatoryList.forEach(function (observatory) {
+            if (observatory.getName() === observatoryName && this._cardBalance >= observatory.getPrice()) {
+                this._cardBalance = this._cardBalance - observatory.getPrice();
+                this._excursions.push(observatoryName);
+            }
+        }.bind(this));
+    };
+};
+
+User.prototype.buyExcursionAsync = function (observatoryName, callback) {
+    if (this._observatoryList.length > 0) {
+        this._observatoryList.forEach(function (observatory) {            
+            if (observatory.getName() === observatoryName && this._cardBalance >= observatory.getPrice()) {
+                setTimeout(function () {
+                    this._cardBalance = this._cardBalance - observatory.getPrice();
+                    this._excursions.push(observatoryName);
+                    callback(this._excursions, this._cardBalance);
+                }.bind(this), 5000)
+            }; 
+            if (this._cardBalance < observatory.getPrice()) {
+                throw new Error ("some error")
+            }
+        }.bind(this));
     };
 };
 

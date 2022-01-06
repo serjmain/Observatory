@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 var solarSystem = new SolarSystem();
 
@@ -6,26 +6,46 @@ var nasa = new Telescope("NASA", "Gamma-ray", solarSystem);
 var usi = new Telescope("USI", "ray", solarSystem);
 var bbs = new Telescope("BBS", "X-ray", solarSystem);
 
-var observatory = new Observatory("OBS", 33, "some information about Solar System", [nasa, usi]);
+var observatory = new Observatory("OBS", 33, 45, [nasa, usi]);
+var observatory2 = new Observatory("OOT", 33, 45, [nasa, usi]);
 
-var gena = new PremiumUser("Gena", "3213213123", "3213123", 55);
+var gena = new PremiumUser("Gena", "someEmail", "somePassword", 55);
 
-var premGena = new PremiumUser("superGena", "3213213123", "3213123", 55);
+var misha = new PremiumUser("Misha", "someEmail", "somePassword", 55);
 
-var user = new User("Vasya", "3213213123", "3213123", 55);
+var user = new User("Vasya", "someEmail", "somePassword", 320);
 
+console.log(user.getObservatoryList())
+user.addObservatory(observatory)
+user.addObservatory(observatory2)
+console.log(user.getObservatoryList())
+console.log (user.getBoughtExcursions())
+user.buyExcursionAsync("OOT", function (excursions, cardBalance) {
+    console.log(excursions);
+    console.log(cardBalance);    
+    console.log(user.getBoughtExcursions());
+})
+ 
+
+/* console.log(observatory.getTelescops());
+observatory.addTelescope(bbs);
+console.log(observatory.getTelescops());
+ */
+
+/* console.log(user.getObservatoryList())
+user.addObservatory(observatory);
+console.log(user.getObservatoryList())
+user.addObservatory(observatory2);
+console.log(user.getObservatoryList())
 console.log(user.getBoughtExcursions())
-console.log(user.getCardBalance())
-user.buyExcursion(observatory)
-console.log(user.getCardBalance())
-console.log(user.getBoughtExcursions())
+console.log(user.getCardBalance());
+user.buyExcursion('OOT');
+console.log(user.getCardBalance());
+console.log(user.getBoughtExcursions()); 
+ */
+/* misha.buyPremium(observatory);
+misha.addObservatory(observatory);
+misha.pickTelescope('USI', 'OBS');
+console.log(misha.watchTelescope());
 
-premGena.buyPremium(observatory);
-premGena.addObservatory(observatory)
-premGena.pickTelescope('USI', 'OBS');
-console.log(premGena.watchTelescope());
-
-gena.pickTelescope('USI', 'OBS');
-gena.addObservatory(observatory);
-console.log(gena.watchTelescope());
-
+ */
